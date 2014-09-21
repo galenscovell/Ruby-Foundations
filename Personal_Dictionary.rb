@@ -10,7 +10,6 @@ def dictionary_search(words)
     hash_results = Hash.new(0)
     puts "Search words separated by spaces: "
     search_list = gets.chomp.to_s.split(" ")
-    puts search_list.inspect
     search_list.each do |searched|
         count = 0
         words.each do |word|
@@ -25,5 +24,4 @@ end
 
 puts "Words for dictionary separated by spaces: "
 words = gets.chomp.to_s.split(" ")
-puts words.inspect
 dictionary_search(words)
