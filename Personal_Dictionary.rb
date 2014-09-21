@@ -7,19 +7,19 @@ was found.
 =end
 
 def dictionary_search(words)
-    hash_results = Hash.new(0)
-    puts "Search words separated by spaces: "
-    search_list = gets.chomp.to_s.split(" ")
-    search_list.each do |searched|
-        count = 0
-        words.each do |word|
-            if word == searched
-                count += 1
-            end
-        end
-        hash_results.merge! searched => count
+  hash_results = Hash.new(0)
+  puts "Search words separated by spaces: "
+  search_list = gets.chomp.to_s.split(" ")
+  search_list.each do |searched|
+    count = 0
+    words.each do |word|
+      if word == searched
+        count += 1
+      end
     end
-    puts hash_results
+    hash_results.merge! searched => count
+  end
+  puts hash_results
 end
 
 puts "Words for dictionary separated by spaces: "

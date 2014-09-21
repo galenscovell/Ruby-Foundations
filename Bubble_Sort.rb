@@ -9,23 +9,23 @@ elements left to be compared.
 =end
 
 def bubble_sort(array)
-    sorted_array =[]
-    start = Time.now
-    while array.size > 0
-        i = 0
-        while i < array.size - 1
-            if array[i] > array[i+1]
-                array[i], array[i+1] = array[i+1], array[i]
-            end
-            i += 1
-        end
-        p array
-        sorted_array << array[-1]
-        array.delete_at(-1)
+  sorted_array =[]
+  start = Time.now
+  while array.size > 0
+    i = 0
+    while i < array.size - 1
+      if array[i] > array[i+1]
+        array[i], array[i+1] = array[i+1], array[i]
+      end
+      i += 1
     end
-    p sorted_array.reverse
-    running_time = Time.now - start
-    puts "Runtime: #{running_time}"
+    p array
+    sorted_array << array[-1]
+    array.delete_at(-1)
+  end
+  p sorted_array.reverse
+  running_time = Time.now - start
+  puts "Runtime: #{running_time}"
 end      
 
 puts "Enter an array of integers to be sorted (separated by spaces): "

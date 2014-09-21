@@ -5,12 +5,12 @@ What is the largest prime factor of the number 600851475143?
 =end
 
 def is_prime?(num)
-    (2..(num-1)).each do |i|
-        if num % i == 0
-            return false
-        end
+  (2..(num-1)).each do |i|
+    if num % i == 0
+      return false
     end
-    return true
+  end
+  return true
 end
 
 puts "\nThis program will compute the largest prime factor of a given number."
@@ -21,9 +21,9 @@ prime_list = []
 
 begin_time = Time.now
 chosen_array.each do |i|
-    if is_prime?(i)
-        prime_list << i
-    end
+  if is_prime?(i)
+    prime_list << i
+  end
 end
 
 puts "\nLargest prime factor of #{chosen_number} is #{prime_list.max}"

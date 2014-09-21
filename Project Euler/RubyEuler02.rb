@@ -15,19 +15,19 @@ limit = gets.chomp.to_i
 fib_array = []
 a, b = 0, 1
 while b < limit
-    fib_array.push(a)
-    a, b = b, a + b
+  fib_array.push(a)
+  a, b = b, a + b
 end
 puts fib_array.inspect
 
 even_sum = 0
 odd_sum = 0
 fib_array.each do |i|
-    if i % 2 == 0
-        even_sum += i
-    else
-        odd_sum += i
-    end
+  if i % 2 == 0
+    even_sum += i
+  else
+    odd_sum += i
+  end
 end
 puts "\nSum of even numbers: #{even_sum}"
 puts "Sum of odd numbers: #{odd_sum}"

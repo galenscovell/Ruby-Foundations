@@ -10,9 +10,9 @@ limit = gets.chomp.to_i
 
 sum, i = 0, 0
 while (i < limit)
-    if (i % 3 == 0 || i % 5 == 0)
-        sum += i
-    end
-    i += 1
+  if (i % 3 == 0 || i % 5 == 0)
+    sum += i
+  end
+  i += 1
 end
 puts sum
