@@ -1,4 +1,4 @@
 Ruby-Foundations
 ================
 
-Ruby building blocks. Everything from Project Euler problems to games to playful algorithms.
+Ruby building blocks. Everything from algorithms to games on my way to becoming a Ruby maestro.
