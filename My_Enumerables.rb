@@ -113,3 +113,4 @@ arr = gets.chomp.split(" ")
 # arr.my_map { |y| y.to_i ** 2 }
 # arr.my_inject(0) { |result, element| result.to_i + element.to_i }
 # arr.my_inject(1) { |product, e| product.to_i * e.to_i }
+
