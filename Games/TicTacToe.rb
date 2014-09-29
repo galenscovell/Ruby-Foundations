@@ -1,6 +1,6 @@
 
 # Tic-tac-toe game designed with emphasis on OOP
-# Without AI, for now
+# Without AI, for now. Also could use some refactoring, (checking win conditions).
 
 class Player
   attr_reader :name, :symbol
@@ -32,6 +32,40 @@ class Board
   end
 
   def check_win
+    x_win = ["X", "X", "X"]
+    o_win = ["O", "O", "O"]
+    # Check rows
+    if [@board_arr[0], @board_arr[1], @board_arr[2]].include?(x_win)
+      return true
+    elsif [@board_arr[0], @board_arr[1], @board_arr[2]].include?(o_win)
+      return true
+    end
+
+    # Check columns
+    if [@board_arr[0][0], @board_arr[1][0], @board_arr[2][0]] == (x_win)
+      return true
+    elsif [@board_arr[0][1], @board_arr[1][1], @board_arr[2][1]] == (x_win)
+      return true
+    elsif [@board_arr[0][2], @board_arr[1][2], @board_arr[2][2]] == (x_win)
+      return true
+    elsif [@board_arr[0][1], @board_arr[1][1], @board_arr[2][1]] == (o_win)
+      return true
+    elsif [@board_arr[0][1], @board_arr[1][1], @board_arr[2][1]] == (o_win)
+      return true
+    elsif [@board_arr[0][1], @board_arr[1][1], @board_arr[2][1]] == (o_win)
+      return true
+    end
+
+    # Check diagonals
+    if [@board_arr[0][0], @board_arr[1][1], @board_arr[2][2]] == (x_win)
+      return true
+    elsif [@board_arr[0][2], @board_arr[1][1], @board_arr[2][0]] == (x_win)
+      return true
+    elsif [@board_arr[0][0], @board_arr[1][1], @board_arr[2][2]] == (o_win)
+      return true
+    elsif [@board_arr[0][2], @board_arr[1][1], @board_arr[2][0]] == (o_win)
+      return true
+    end
     return false
   end
 
