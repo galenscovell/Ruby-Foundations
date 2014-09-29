@@ -1,6 +1,5 @@
 
 # Tic-tac-toe game designed with emphasis on OOP
-# Without AI, for now. Also could use some refactoring, (checking win conditions).
 
 class Player
   attr_reader :name, :symbol
@@ -84,8 +83,7 @@ class Board
     until move_choice[0].between?(1, 3) && move_choice[1].between?(1, 3)
       puts "Place #{symbol} where? (row column) "
       input = gets.chomp.split(" ")
-      move_choice[0] = input[0].to_i
-      move_choice[1] = input[1].to_i
+      move_choice[0], move_choice[1] = input[0].to_i, input[1].to_i
     end
     check_move(player, symbol, move_choice[0], move_choice[1])
   end
@@ -103,37 +101,37 @@ def play_again(player_1, player_2)
   end
 end
 
-# Main game flow
-def game_play(player_1, player_2)
+# Main game flow, player who lost previous match begins next match
+def game_play(first, second)
   $board = Board.new
   $board.show
   remaining_moves = 9
 
   until $board.check_win
     while remaining_moves > 0
-      $board.player_move(player_1.name, player_1.symbol)
+      $board.player_move(first.name, first.symbol)
       if $board.check_win
-        puts "Player one wins!"
-        player_1.wins += 1
-        play_again(player_1, player_2)
+        puts "#{first.name} wins!"
+        first.wins += 1
+        play_again(second, first)
       end
       remaining_moves -= 1
       if remaining_moves == 0
         break
       end
-      $board.player_move(player_2.name, player_2.symbol)
+      $board.player_move(second.name, second.symbol)
       $board.check_win
       if $board.check_win
-        puts "Player two wins!"
-        player_2.wins += 1
-        play_again(player_1, player_2)
+        puts "#{second.name} wins!"
+        second.wins += 1
+        play_again(first, second)
       end
       remaining_moves -= 1
     end
     puts "No moves left. Draw!"
     break
   end
-  play_again(player_1, player_2)
+  play_again(second, first)
 end
 
 # Player setup
