@@ -29,7 +29,5 @@ def bubble_sort(array)
 end      
 
 puts "Enter an array of integers to be sorted (separated by spaces): "
-integer_list = gets.chomp.split(" ")
-integer_list = integer_list.map { |n| n.to_i }
-p integer_list
+integer_list = gets.split.map { |x| x.to_i }
 bubble_sort(integer_list)

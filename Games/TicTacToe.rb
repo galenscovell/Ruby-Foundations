@@ -26,7 +26,7 @@ class Board
   end
 
   def update(symbol, row, column)
-    @board_arr[row - 1][column - 1] = symbol
+    @board_arr[row-1][column-1] = symbol
     $board.show
   end
 
@@ -69,7 +69,7 @@ class Board
   end
 
   def check_move(player, symbol, row, column) 
-    if @board_arr[row - 1][column - 1] == "X" || @board_arr[row - 1][column - 1] == "O"
+    if @board_arr[row-1][column-1] == "X" || @board_arr[row-1][column-1] == "O"
       puts "That spot is already taken."
       player_move(player, symbol)
     else
