@@ -1,76 +1,39 @@
 
 # Tic-tac-toe game designed with emphasis on OOP
-
-class Player
-  attr_reader :name, :symbol
-  attr_accessor :wins
-
-  def initialize(name, symbol)
-    @name = name
-    @symbol= symbol
-    @wins = 0
-  end
-end
+# This time without overly complicated multidimensional arrays!
 
 class Board
+  attr_accessor :board
 
   def initialize
-    @board_arr = [["-", "-", "-"], ["-", "-", "-"], ["-", "-", "-"]]
+    @board = {1 => " ", 2 => " ", 3 => " ", 4 => " ", 5 => " ", 6 => " ", 7 => " ", 8 => " ", 9 => " "}
+    @columns = [
+      [1, 2, 3], 
+      [4, 5, 6], 
+      [7, 8, 9],
+
+      [1, 4, 7],
+      [2, 5, 8],
+      [3, 6, 9],
+
+      [1, 5, 9],
+      [3, 5, 7]
+      ] 
   end
 
   def show
-    puts "\n"
-    @board_arr.each do |subarray|
-      puts "     | " + subarray.join(" ") + " |"
-    end
+    puts "\n   1[#{@board[1]}] 2[#{@board[2]}] 3[#{@board[3]}]"
+    puts "   4[#{@board[4]}] 5[#{@board[5]}] 6[#{@board[6]}]"
+    puts "   7[#{@board[7]}] 8[#{@board[8]}] 9[#{@board[9]}]"
   end
 
-  def update(symbol, row, column)
-    @board_arr[row-1][column-1] = symbol
-    $board.show
+  def update(symbol, spot)
+    @board[spot] = symbol
   end
 
-  def check_win
-    x_win = ["X", "X", "X"]
-    o_win = ["O", "O", "O"]
-    # Check rows
-    if [@board_arr[0], @board_arr[1], @board_arr[2]].include?(x_win)
-      return true
-    elsif [@board_arr[0], @board_arr[1], @board_arr[2]].include?(o_win)
-      return true
-    end
-
-    # Check columns
-    if [@board_arr[0][0], @board_arr[1][0], @board_arr[2][0]] == (x_win)
-      return true
-    elsif [@board_arr[0][1], @board_arr[1][1], @board_arr[2][1]] == (x_win)
-      return true
-    elsif [@board_arr[0][2], @board_arr[1][2], @board_arr[2][2]] == (x_win)
-      return true
-    elsif [@board_arr[0][1], @board_arr[1][1], @board_arr[2][1]] == (o_win)
-      return true
-    elsif [@board_arr[0][1], @board_arr[1][1], @board_arr[2][1]] == (o_win)
-      return true
-    elsif [@board_arr[0][1], @board_arr[1][1], @board_arr[2][1]] == (o_win)
-      return true
-    end
-
-    # Check diagonals
-    if [@board_arr[0][0], @board_arr[1][1], @board_arr[2][2]] == (x_win)
-      return true
-    elsif [@board_arr[0][2], @board_arr[1][1], @board_arr[2][0]] == (x_win)
-      return true
-    elsif [@board_arr[0][0], @board_arr[1][1], @board_arr[2][2]] == (o_win)
-      return true
-    elsif [@board_arr[0][2], @board_arr[1][1], @board_arr[2][0]] == (o_win)
-      return true
-    end
-    return false
-  end
-
-  def check_move(player, symbol, row, column) 
-    if @board_arr[row-1][column-1] == "-"
-      update(symbol, row, column)
+  def check_move(player, symbol, spot) 
+    if @board[spot] == " "
+      update(symbol, spot)
     else
       puts "That spot is already taken."
       player_move(player, symbol)
@@ -79,100 +42,127 @@ class Board
 
   def player_move(player, symbol)
     puts "\n#{player}'s turn (#{symbol}'s)."
-    choice = [0, 0]
-    until choice[0].between?(1, 3) && choice[1].between?(1, 3)
-      puts "Place #{symbol} where? (row column) "
-      input = gets.chomp.split(" ")
-      choice[0], choice[1] = input[0].to_i, input[1].to_i
+    choice = 0
+    until choice.between?(1, 9)
+      puts "Place #{symbol} where?"
+      choice = gets.chomp.to_i
     end
-    check_move(player, symbol, choice[0], choice[1])
+    check_move(player, symbol, choice)
+  end
+
+  def check_win
+    x_win = ["X", "X", "X"]
+    o_win = ["O", "O", "O"]
+    row_1 = [@board[1], @board[2], @board[3]]
+    row_2 = [@board[4], @board[5], @board[6]]
+    row_3 = [@board[7], @board[8], @board[9]]
+    column_1 = [@board[1], @board[4], @board[7]]
+    column_2 = [@board[2], @board[5], @board[8]]
+    column_3 = [@board[3], @board[6], @board[9]]
+    diagonal_1 = [@board[1], @board[5], @board[9]]
+    diagonal_2 = [@board[3], @board[5], @board[7]]
+
+    # Horizontal wins
+    if row_1 == x_win || row_1 == o_win
+      true
+    elsif row_2 == x_win || row_2 == o_win
+      true
+    elsif row_3 == x_win || row_3 == o_win
+      true
+
+    # Vertical wins
+    elsif column_1 == x_win || column_1 == o_win
+      true
+    elsif column_2 == x_win || column_2 == o_win
+      true
+    elsif column_3 == x_win || column_3 == o_win
+      true
+
+    # Diagonal wins
+    elsif diagonal_1 == x_win || diagonal_1 == o_win
+      true
+    elsif diagonal_2 == x_win || diagonal_2 == o_win
+      true
+    else
+      false
+    end
+  end
+
+  def times_in_column (arr, symbol)
+    times = 0
+    arr.each do |i|
+      times += 1 if @board[i] == symbol
+      unless @board[i] == symbol || @board[i] == " "
+        return 0
+      end
+    end
+    times
+  end
+
+  def empty_in_column (arr)
+    arr.each do |i|
+      if @board[i] == " "
+        return i
+      end
+    end
   end
 
   def computer_move
-    puts "\nComputer turn (O's)."
-   
-    # Take horizontal win
-    if @board_arr[0].count("O") == 2 && @board_arr[0].count("-") == 1
-      @board_arr[0].map! { |x| x == "-" ? "O" : x }
-      $board.show
-    elsif @board_arr[1].count("O") == 2 && @board_arr[1].count("-") == 1
-      @board_arr[1].map! { |x| x == "-" ? "O" : x }
-      $board.show
-    elsif @board_arr[2].count("O") == 2 && @board_arr[2].count("-") == 1
-      @board_arr[2].map! { |x| x == "-" ? "O" : x }
-      $board.show
+    spot = computer_find_move
+    @board[spot] = "O"
+  end
 
-    # Block player horizontally
-    elsif @board_arr[0].count("X") == 2 && @board_arr[0].count("-") == 1
-      @board_arr[0].map! { |x| x == "-" ? "O" : x }
-      $board.show
-    elsif @board_arr[1].count("X") == 2 && @board_arr[1].count("-") == 1
-      @board_arr[1].map! { |x| x == "-" ? "O" : x }
-      $board.show
-    elsif @board_arr[2].count("X") == 2 && @board_arr[2].count("-") == 1
-      @board_arr[2].map! { |x| x == "-" ? "O" : x }
-      $board.show
+  def computer_find_move
+    puts "\n Computer's turn (O's)."
+    # Take win
+    @columns.each do |column|
+      if times_in_column(column, "O") == 2
+        return empty_in_column(column)
+      end
+    end
+    
+    # Block player win
+    @columns.each do |column|
+      if times_in_column(column, "X") == 2
+        return empty_in_column(column)
+      end
+    end
+    
+    # Take positions next to adjacent
+    @columns.each do |column|
+      if times_in_column(column, "O") == 1
+        return empty_in_column(column)
+      end
+    end
 
-    # Center
-    elsif @board_arr[1][1] == "-"
-      @board_arr[1][1] = "O"
-      $board.show
-
-    # Diagonals
-    elsif (@board_arr[0][0] == "X" || @board_arr[0][0] == "O") && @board_arr[2][2] == "-"
-      @board_arr[2][2] = "O"
-      $board.show
-    elsif (@board_arr[0][2] == "X" || @board_arr[0][2] == "O") && @board_arr[2][0] == "-"
-      @board_arr[2][0] = "O"
-      $board.show
-    elsif (@board_arr[2][0] == "X" || @board_arr[2][0] == "O") && @board_arr[0][2] == "-"
-      @board_arr[0][2] = "O"
-      $board.show
-    elsif (@board_arr[2][2] == "X" || @board_arr[2][2] == "O") && @board_arr[0][0] == "-"
-      @board_arr[0][0] = "O"
-      $board.show
-
-    # Adjacent to corner spots
-    elsif @board_arr[0][0] == "O" && @board_arr[1][0] == "-"
-      @board_arr[1][0] = "O"
-      $board.show
-    elsif @board_arr[0][0] == "O" && @board_arr[0][1] == "-"
-      @board_arr[0][1] = "O"
-      $board.show 
-    elsif @board_arr[0][2] == "O" && @board_arr[0][1] == "-"
-      @board_arr[0][1] = "O"
-      $board.show
-    elsif @board_arr[0][2] == "O" && @board_arr[1][2] == "-"
-      @board_arr[1][2] = "O"
-      $board.show
-    elsif @board_arr[2][0] == "O" && @board_arr[1][0] == "-"
-      @board_arr[1][0] = "O"
-      $board.show
-    elsif @board_arr[2][0] == "O" && @board_arr[2][1] == "-"
-      @board_arr[2][1] = "O"
-      $board.show
-    elsif @board_arr[2][2] == "O" && @board_arr[1][2] == "-"
-      @board_arr[1][2] = "O"
-      $board.show
-    elsif @board_arr[2][2] == "O" && @board_arr[2][1] == "-"
-      @board_arr[2][1] = "O"
-      $board.show
-
-    elsif @board_arr[0][0] == "-"
-      @board_arr[0][0] = "O"
-      $board.show
-    elsif @board_arr[0][2] == "-"
-      @board_arr[0][2] = "O"
-      $board.show
-    elsif @board_arr[2][0] == "-"
-      @board_arr[2][0] = "O"
-      $board.show
-    elsif @board_arr[2][2] == "-"
-      @board_arr[2][2] = "O"
-      $board.show
+    # Center or random
+    if @board[5] == " "
+      return 5
+    else
+      open_spots = []
+      @board.each do |k, v|
+        if v == " "
+          open_spots << k.to_i
+        end
+      end
+      random_spot = open_spots.sample
+      return random_spot
     end
   end
 end
+
+
+class Player
+  attr_reader :name, :symbol
+  attr_accessor :wins
+
+  def initialize(name, symbol)
+    @name = name
+    @symbol = symbol
+    @wins = 0
+  end
+end
+
 
 class Computer
   attr_reader :name, :symbol
@@ -198,15 +188,16 @@ def play_again(player_1, player_2)
 end
 
 def game_play(first, second)
-  $board = Board.new
-  $board.show
+  board = Board.new
+  board.show
   remaining_moves = 9
 
-  until $board.check_win
+  until board.check_win
     while remaining_moves > 0
       if first.name == "Computer"
-        $board.computer_move
-        if $board.check_win
+        board.computer_move    
+        board.show
+        if board.check_win
           puts "#{first.name} wins!"
           first.wins += 1
           play_again(second, first)
@@ -216,8 +207,9 @@ def game_play(first, second)
           break
         end
       else
-        $board.player_move(first.name, first.symbol)
-        if $board.check_win
+        board.player_move(first.name, first.symbol)
+        board.show
+        if board.check_win
           puts "#{first.name} wins!"
           first.wins += 1
           play_again(second, first)
@@ -228,18 +220,18 @@ def game_play(first, second)
         end
       end
       if second.name == "Computer"
-        $board.computer_move
-        $board.check_win
-        if $board.check_win
+        board.computer_move
+        board.show
+        if board.check_win
           puts "#{second.name} wins!"
           second.wins += 1
           play_again(first, second)
         end
         remaining_moves -= 1
       else
-        $board.player_move(second.name, second.symbol)
-        $board.check_win
-        if $board.check_win
+        board.player_move(second.name, second.symbol)
+        board.show
+        if board.check_win
           puts "#{second.name} wins!"
           second.wins += 1
           play_again(first, second)
@@ -252,7 +244,6 @@ def game_play(first, second)
   end
   play_again(second, first)
 end
-
 
 puts "\nThis is Tic-Tac-Toe, the game of pure skill."
 
