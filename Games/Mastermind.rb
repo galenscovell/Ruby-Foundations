@@ -38,7 +38,7 @@ class Mastermind
     end
   end
 
-  def computer_hint(guess)
+  def make_hint(guess)
     hint_array = []
     board_duplicate = {1 => @board[1], 2 => @board[2], 3 => @board[3], 4 => @board[4]}
     guess_duplicate = {1 => guess[1], 2 => guess[2], 3 => guess[3], 4 => guess[4]}
@@ -60,7 +60,6 @@ class Mastermind
     while hint_array.size < 4
       hint_array << " "
     end
-    # hint_array.shuffle!
     @hints.update(@hints) { |k, v| v = hint_array[k-1] }
   end
 
@@ -76,12 +75,32 @@ class Mastermind
     @guess
   end
 
+  def computer_guess
+    colors = ["R", "G", "B", "Y"]
+    @guess.each do |key, value|
+      @guess[key] = colors.sample
+    end
+    puts "\nCode created."
+    @guess
+  end
+
+  def player_make_code
+    code_arr = []
+    until code_arr.size == 4
+      puts "\nEnter 4 digit code using R G B Y (separated by spaces): "
+      code_arr = gets.chomp.split
+      code_arr.each { |n| n =~ /[0-9]/ ? code_arr.delete(n) : n.upcase! }
+      code_arr.keep_if { |v| v =~ /[RGBY]/ }
+    end
+    @board.update(@board) { |k, v| v = code_arr[k-1] }
+    @board
+  end
+
   def computer_make_code
     colors = ["R", "G", "B", "Y"]
     @board.each do |key, value|
       @board[key] = colors.sample
     end
-    puts "\nCode created."
     @board
   end
 end
@@ -109,8 +128,25 @@ end
 
 def codemaker(player)
   board = Mastermind.new
-  board.draw
   code_hash = board.player_make_code
+  board.draw
+  while board.turns > 0
+    sleep(2)
+    guessed_code = board.computer_guess
+    if board.check_win(guessed_code)
+      puts "\nCode correctly broken. Computer wins!"
+      player.losses += 1
+      play_again(player)
+    else
+      hint = board.make_hint(guessed_code)
+      board.draw
+      board.turns -= 1
+    end
+  end
+  puts "\nNo guesses remaining. Player wins!"
+  player.wins += 1
+  board.game_over_code
+  play_again(player)
 end
 
 def codebreaker(player)
@@ -124,7 +160,7 @@ def codebreaker(player)
       player.wins += 1
       play_again(player)
     else
-      hint = board.computer_hint(guessed_code)
+      hint = board.make_hint(guessed_code)
       board.draw
       board.turns -= 1
     end
