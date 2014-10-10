@@ -80,7 +80,6 @@ class Mastermind
     @guess.each do |key, value|
       @guess[key] = colors.sample
     end
-    puts "\nCode created."
     @guess
   end
 
@@ -101,6 +100,7 @@ class Mastermind
     @board.each do |key, value|
       @board[key] = colors.sample
     end
+    puts "\nCode created."
     @board
   end
 end
@@ -129,7 +129,6 @@ end
 def codemaker(player)
   board = Mastermind.new
   code_hash = board.player_make_code
-  board.draw
   while board.turns > 0
     sleep(2)
     guessed_code = board.computer_guess
@@ -151,7 +150,6 @@ end
 
 def codebreaker(player)
   board = Mastermind.new
-  board.draw
   code = board.computer_make_code
   while board.turns > 0
     guessed_code = board.player_guess
