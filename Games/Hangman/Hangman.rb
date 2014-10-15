@@ -13,6 +13,8 @@ class Player
   end
 end
 
+
+
 class Hangman
   attr_accessor :turns, :used
   attr_reader :word
@@ -33,10 +35,10 @@ class Hangman
     @letters_remaining = @word.length
   end
 
-  def show(human)
-    puts "\n\tPlayer: #{human.name}"
-    puts "\tWins: #{human.wins}"
-    puts "\tLosses: #{human.losses}"
+  def show(player)
+    puts "\n\tPlayer: #{player.name}"
+    puts "\tWins: #{player.wins}"
+    puts "\tLosses: #{player.losses}"
     puts "\tTurn Number: #{@turns}"
     puts "\n\t|" + ("~" * @word.length) + "|"
     puts "\t|" + (" " * @word.length) + "|"
@@ -97,30 +99,58 @@ class Hangman
   def load
   end
 
-  def again?
+  def again?(player)
+    again = " "
+    until again[0] == "y" || again[0] == "n"
+      puts "[Play again?]"
+      again = gets.chomp.downcase
+    end
+    if again[0] == "y"
+      game_flow(player)
+    else
+      puts "See you later!"
+      puts "\n"
+      exit
+    end
   end
 end
+
+
+
+def game_flow(player)
+  game = Hangman.new
+  game.show(player)
+  puts game.word
+  until game.turns == 7
+    game.turns += 1
+    game.guess
+    if game.win?
+      puts "\n[Word guessed!]"
+      player.wins += 1
+      game.again?(player)
+    end
+    game.show(player)
+  end
+  puts "\n[No more turns!]"
+  puts "[Word was #{game.word}. Better luck next time.]"
+  puts "\n"
+  player.losses += 1
+  game.again?(player)
+end
+
 
 puts "\n[+=+=+=+=+{HANGMAN}+=+=+=+=+]"
 puts "\n[Enter player name:]"
 name = gets.chomp
-human = Player.new(name)
-
-# Main game loop
-game = Hangman.new
-game.show(human)
-puts game.word
-until game.turns == 7
-  game.turns += 1
-  game.guess
-  if game.win?
-    puts "\n[Word guessed!]"
-    human.wins += 1
-    game.again?
-  end
-  game.show(human)
+player = Player.new(name)
+loading = " "
+until loading[0] == "y" || loading[0] == "n"
+  puts "[Load previous game?]"
+  loading = gets.chomp.downcase
 end
-puts "\n[No more turns!]"
-puts "[Word was #{game.word}. Better luck next time.]"
-human.losses += 1
-game.again?
+if loading[0] == "y"
+  exit
+else
+  game_flow(player)
+end
+
