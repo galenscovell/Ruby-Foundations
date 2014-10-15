@@ -46,7 +46,7 @@ class Hangman
     puts "\t|" + ("_" * @word.length) + "|"
   end
 
-  def guess
+  def guess(player)
     word_duplicate = @word.split("")
     puts "\n[Enter a letter ('word' to guess word, 'save' to save):] "
     letter = gets.chomp.downcase
@@ -54,7 +54,7 @@ class Hangman
     if letter == "word"
       guess_word
     elsif letter == "save"
-      save
+      save(player)
     elsif letter.length != 1 || @used.include?(letter)
       guess
     elsif word_duplicate.include?(letter)
@@ -93,16 +93,20 @@ class Hangman
     end
   end
 
-  def save
-  end
+  def save(player)
+    Dir.mkdir("saves") unless Dir.exists?("saves")
+    puts "\n[Enter filename for save:]"
+    filename = "saves/" + gets.chomp.downcase + ".txt"
 
-  def load
+    File.open(filename, 'w') do |file|
+      file.puts @turns, @used, @word, @letters_remaining, player.wins, player.losses, player.name
+    end
   end
 
   def again?(player)
     again = " "
     until again[0] == "y" || again[0] == "n"
-      puts "[Play again?]"
+      puts "\n[Play again?]"
       again = gets.chomp.downcase
     end
     if again[0] == "y"
@@ -117,13 +121,25 @@ end
 
 
 
+def load_game
+  puts "[Enter filename to load:]"
+  filename = "saves/" + gets.chomp.downcase + ".txt"
+
+  if File.exists?(filename)
+    File.read(filename, 'r') do |file|
+      exit
+    end
+  else
+    puts "File does not exist."
+  end
+end
+
 def game_flow(player)
   game = Hangman.new
   game.show(player)
-  puts game.word
   until game.turns == 7
     game.turns += 1
-    game.guess
+    game.guess(player)
     if game.win?
       puts "\n[Word guessed!]"
       player.wins += 1
@@ -140,17 +156,17 @@ end
 
 
 puts "\n[+=+=+=+=+{HANGMAN}+=+=+=+=+]"
-puts "\n[Enter player name:]"
-name = gets.chomp
-player = Player.new(name)
 loading = " "
 until loading[0] == "y" || loading[0] == "n"
-  puts "[Load previous game?]"
+  puts "\n[Load previous game?]"
   loading = gets.chomp.downcase
 end
 if loading[0] == "y"
-  exit
+  load_game
 else
+  puts "\n[Enter player name:]"
+  name = gets.chomp
+  player = Player.new(name)
   game_flow(player)
 end
 
