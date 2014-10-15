@@ -126,8 +126,8 @@ def load_game
   filename = "saves/" + gets.chomp.downcase + ".txt"
 
   if File.exists?(filename)
-    File.read(filename, 'r') do |file|
-      exit
+    File.open(filename).readlines.each do |line|
+      puts line
     end
   else
     puts "File does not exist."
