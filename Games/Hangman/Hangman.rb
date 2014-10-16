@@ -3,10 +3,12 @@
 # Includes imported dictionary for word selection and progress saving/loading
 
 
+require 'yaml'
+
 class Player
   attr_accessor :wins, :losses, :name
 
-  def initialize(name)
+  def initialize(name, wins=0, losses=0)
     @wins = 0
     @losses = 0
     @name = name
@@ -16,15 +18,14 @@ end
 
 
 class Hangman
-  attr_accessor :turns, :used
-  attr_reader :word
+  attr_accessor :turns, :used, :word
 
   def initialize
     @turns = 1
-    @used = []
+    @used_letters = []
     
     word_list = File.open('dictionary.txt', 'r') do |file| 
-      file.read
+        file.read
     end
     valid_words = word_list.split.select do |word|
       word.length.between?(5, 12)
@@ -44,18 +45,22 @@ class Hangman
     puts "\t|" + (" " * @word.length) + "|"
     puts "\t|#{@board}" + "|"
     puts "\t|" + ("_" * @word.length) + "|"
+    puts "\nUsed letters: #{@used_letters}"
   end
 
-  def guess(player)
+  def guess(player, game)
     word_duplicate = @word.split("")
-    puts "\n[Enter a letter ('word' to guess word, 'save' to save):] "
+    puts "\n[Enter a letter (options: 'word' 'save' 'exit'):]"
     letter = gets.chomp.downcase
   
     if letter == "word"
       guess_word
     elsif letter == "save"
-      save(player)
-    elsif letter.length != 1 || @used.include?(letter)
+      save(player, game)
+    elsif letter == "exit"
+      puts "\nUntil next time!"
+      exit
+    elsif letter.length != 1 || @used_letters.include?(letter)
       guess
     elsif word_duplicate.include?(letter)
       amount = 0
@@ -66,10 +71,10 @@ class Hangman
         end
       end
       @letters_remaining -= amount
-      @used << letter
+      @used_letters << letter
       puts "\n\n[Yup, #{letter} is in the word #{amount} times.]"
     else
-      @used << letter
+      @used_letters << letter
       puts "\n\n[Nope, #{letter} is not in the word.]"
     end
   end
@@ -93,13 +98,18 @@ class Hangman
     end
   end
 
-  def save(player)
+  def save(player, game)
     Dir.mkdir("saves") unless Dir.exists?("saves")
     puts "\n[Enter filename for save:]"
-    filename = "saves/" + gets.chomp.downcase + ".txt"
+    filename = "saves/" + gets.chomp.downcase
+    filename_game = filename + "_game.txt"
+    filename_player = filename + "_player.txt"
 
-    File.open(filename, 'w') do |file|
-      file.puts @turns, @used, @word, @letters_remaining, player.wins, player.losses, player.name
+    File.open(filename_player, 'w') do |file|
+      file.write(YAML.dump(player))
+    end
+    File.open(filename_game, 'w') do |file|
+      file.write(YAML.dump(game))
     end
   end
 
@@ -123,23 +133,26 @@ end
 
 def load_game
   puts "[Enter filename to load:]"
-  filename = "saves/" + gets.chomp.downcase + ".txt"
+  filename = "saves/" + gets.chomp.downcase
+  filename_game = filename + "_game.txt"
+  filename_player = filename + "_player.txt"
 
-  if File.exists?(filename)
-    File.open(filename).readlines.each do |line|
-      puts line
-    end
+  loaded_data = []
+  if File.exists?(filename_player)
+    loaded_player = YAML.load(File.read(filename_player))
+    loaded_game = YAML.load(File.read(filename_game))
+    game_flow(loaded_player, loaded_game)
   else
     puts "File does not exist."
+    exit
   end
 end
 
-def game_flow(player)
-  game = Hangman.new
+def game_flow(player, game)
   game.show(player)
-  until game.turns == 7
+  until game.turns == 9
     game.turns += 1
-    game.guess(player)
+    game.guess(player, game)
     if game.win?
       puts "\n[Word guessed!]"
       player.wins += 1
@@ -167,6 +180,7 @@ else
   puts "\n[Enter player name:]"
   name = gets.chomp
   player = Player.new(name)
-  game_flow(player)
+  game = Hangman.new
+  game_flow(player, game)
 end
 

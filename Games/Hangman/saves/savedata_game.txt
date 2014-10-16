@@ -1,0 +1,11 @@
+--- !ruby/object:Hangman
+turns: 7
+used_letters:
+- a
+- b
+- g
+- n
+- l
+word: salazar
+board: -ala-a-
+letters_remaining: 3
