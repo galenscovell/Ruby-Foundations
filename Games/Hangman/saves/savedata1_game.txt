@@ -1,0 +1,12 @@
+--- !ruby/object:Hangman
+turns: 8
+used_letters:
+- a
+- e
+- i
+- g
+- b
+- u
+word: subnormal
+board: -ub----a-
+letters_remaining: 6

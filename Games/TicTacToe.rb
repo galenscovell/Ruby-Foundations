@@ -44,7 +44,7 @@ class Board
     puts "\n#{player}'s turn (#{symbol}'s)."
     choice = 0
     until choice.between?(1, 9)
-      puts "Place #{symbol} where?"
+      printf "Place #{symbol} where? "
       choice = gets.chomp.to_i
     end
     check_move(player, symbol, choice)
@@ -247,18 +247,18 @@ end
 
 puts "\nThis is Tic-Tac-Toe, the game of pure skill."
 
-puts "\nPlayer 1 name: "
+printf "\nPlayer 1 name: "
 name_1 = gets.chomp
 symbol_1 = "X"
 player_1 = Player.new(name_1, symbol_1)
 
 mode = " "
 while mode != "computer" && mode != "player"
-  puts "Vs. Computer or Vs. Player?"
+  printf "Vs. Computer or Vs. Player: "
   mode = gets.chomp.downcase
 end
 if mode == "player"
-  puts "Player 2 name: "
+  printf "Player 2 name: "
   name_2 = gets.chomp
   symbol_2 = "O"
   player_2 = Player.new(name_2, symbol_2)

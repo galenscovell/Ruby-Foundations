@@ -50,7 +50,7 @@ class Hangman
 
   def guess(player, game)
     word_duplicate = @word.split("")
-    puts "\n[Enter a letter (options: 'word' 'save' 'exit'):]"
+    printf "\n[Enter a letter (options: 'word' 'save' 'exit')]: "
     letter = gets.chomp.downcase
   
     if letter == "word"
@@ -100,7 +100,7 @@ class Hangman
 
   def save(player, game)
     Dir.mkdir("saves") unless Dir.exists?("saves")
-    puts "\n[Enter filename for save:]"
+    printf "\n[Enter filename for save]: "
     filename = "saves/" + gets.chomp.downcase
     filename_game = filename + "_game.txt"
     filename_player = filename + "_player.txt"
@@ -116,7 +116,7 @@ class Hangman
   def again?(player)
     again = " "
     until again[0] == "y" || again[0] == "n"
-      puts "\n[Play again?]"
+      printf "\n[Play again?]: "
       again = gets.chomp.downcase
     end
     if again[0] == "y"
@@ -132,7 +132,7 @@ end
 
 
 def load_game
-  puts "[Enter filename to load:]"
+  printf "[Enter filename to load]: "
   filename = "saves/" + gets.chomp.downcase
   filename_game = filename + "_game.txt"
   filename_player = filename + "_player.txt"
@@ -171,13 +171,13 @@ end
 puts "\n[+=+=+=+=+{HANGMAN}+=+=+=+=+]"
 loading = " "
 until loading[0] == "y" || loading[0] == "n"
-  puts "\n[Load previous game?]"
+  printf "\n[Load previous game?]: "
   loading = gets.chomp.downcase
 end
 if loading[0] == "y"
   load_game
 else
-  puts "\n[Enter player name:]"
+  printf "\n[Enter player name]: "
   name = gets.chomp
   player = Player.new(name)
   game = Hangman.new

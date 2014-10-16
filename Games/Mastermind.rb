@@ -66,7 +66,7 @@ class Mastermind
   def player_guess
     guess_arr = []
     until guess_arr.size == 4
-      puts "\nEnter 4 digit code using R G B Y (separated by spaces): "
+      printf "\nEnter 4 digit code using R G B Y (separated by spaces): "
       guess_arr = gets.chomp.split
       guess_arr.each { |n| n =~ /[0-9]/ ? guess_arr.delete(n) : n.upcase! }
       guess_arr.keep_if { |v| v =~ /[RGBY]/ }
@@ -86,7 +86,7 @@ class Mastermind
   def player_make_code
     code_arr = []
     until code_arr.size == 4
-      puts "\nEnter 4 digit code using R G B Y (separated by spaces): "
+      printf "\nEnter 4 digit code using R G B Y (separated by spaces): "
       code_arr = gets.chomp.split
       code_arr.each { |n| n =~ /[0-9]/ ? code_arr.delete(n) : n.upcase! }
       code_arr.keep_if { |v| v =~ /[RGBY]/ }
@@ -114,7 +114,7 @@ def menu(player)
   puts "[------------------------]"
   selection = 0
   until selection.between?(1, 4)
-    puts "Enter selection: "
+    printf "Enter selection: "
     selection = gets.chomp.to_i
     if selection == 1
       codemaker(player)
